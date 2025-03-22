@@ -10,8 +10,10 @@ import langgraph as lg
 from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
 
+os.environ["TAVILY_API_KEY"] = "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"
+
 client = OpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
+    api_key="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",
     base_url = "https://api.groq.com/openai/v1",
 )
 
