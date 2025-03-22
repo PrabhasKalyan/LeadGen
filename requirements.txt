@@ -5,3 +5,4 @@ langchain
 gspread
 dotenv
 python-dotenv
+langchain_community
