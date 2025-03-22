@@ -4,3 +4,4 @@ openai
 langchain
 gspread
 dotenv
+python-dotenv
