@@ -11,6 +11,7 @@
         "src": "/(.*)",
         "dest": "api/main.py"
       }
-    ]
+    ],
+    "buildCommand": "pip install -r requirements.txt"
   }
   
