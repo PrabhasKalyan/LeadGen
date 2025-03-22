@@ -40,7 +40,7 @@ def websearch(state):
     response = client.chat.completions.create(
     model="llama3-8b-8192",
     messages=[
-        {"role": "user", "content":f"Analyse this {search_results}and answer the question :{prompt} Do not provide any explanation or additional text just give me the answer "}
+        {"role": "user", "content":f"Analyse this {search_results}and answer the question :{prompt} Do not provide any explanation or additional text just give me the answer this is very importnt as it will go directly to google sheets "}
     ])
     state={"messages": state["messages"] + [AIMessage(response.choices[0].message.content)]}
     print(state["messages"][-1].content)
