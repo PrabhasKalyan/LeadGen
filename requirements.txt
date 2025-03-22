@@ -1,0 +1,6 @@
+fastapi
+langgraph
+openai
+langchain
+gspread
+
