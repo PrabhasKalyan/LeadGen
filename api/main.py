@@ -88,7 +88,7 @@ def start(prompt):
 
 @app.post("/scrape_agent")
 def scrape_agent(prompt):
-    prompt = prompt  + "\nAnalyze the following query and describe it in 20-25 words in breif"  
+    prompt = prompt  + "\nAnalyze the following query and describe it in 20-25 words in breif and give only the answer and nothing else only the answer no explanations strictly"  
     response = client.chat.completions.create(
         model="llama3-8b-8192",
          messages=[
