@@ -86,7 +86,16 @@ def start(prompt):
     print(output["messages"][-1].content)
     return output["messages"][-1].content
 
-
+@app.post("/scrape_agent")
+def scrape_agent(prompt):
+    prompt = prompt  + "\nAnalyze the following query and describe it in 20-25 words in breif"  
+    response = client.chat.completions.create(
+        model="llama3-8b-8192",
+         messages=[
+        {"role": "user", "content":prompt}]
+        )
+    info =response.choices[0].message.content
+    return info
 
 
 
