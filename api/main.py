@@ -135,7 +135,7 @@ def business_linkedin(link):
      with open("output.txt", "w") as file:
         return info
 
-@app.post("personal_linkedin")
+@app.post("/personal_linkedin")
 def personal_linkedin(link):
      prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from the HTML of a LinkedIn personal profile page, extract and return the following details in a structured JSON format:  
 
