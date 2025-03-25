@@ -9,8 +9,9 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 import langgraph as lg
 from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
-from api.rag import rag
+from rag import rag
 from leadgen_agent import get_info
+from scrape import scrape_website1,clean_body_content
 
 os.environ["TAVILY_API_KEY"] = "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"
 
@@ -107,6 +108,32 @@ def search_agent(link,prompt):
             pass
 
 
+
+@app.post("/business_linkedin")
+def search_linkedin(link):
+     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
+
+
+1. **Company Name**: Extract the official name of the company.
+2. **LinkedIn URL**: The URL of the company's LinkedIn page.
+3. **Website URL**: The official website of the company.
+4. **Industry**: The industry the company operates in.
+5. **Company Size**: The number of employees (range, e.g., "51-200").
+6. **Headquarters**: The location of the company’s headquarters.
+7. **Year Founded**: The year the company was established.
+8. **Company Type**: Whether it is a private, public, non-profit, etc.
+9. **Company Description**: A short summary of what the company does.
+10. **Specialties**: Key areas the company specializes in.
+11. **Employee Count on LinkedIn**: The number of employees listed on LinkedIn not follower like(eg.View all 173 employees)).
+
+                return only if the answer is known else return None
+**Format the output as json**:"""
+     scrape_website1(link)
+     with open("output.txt", "r") as file:
+        text=file.read()
+     info=invoke_llm(text + prompt)
+     with open("output.txt", "w") as file:
+        return info
 
 
 

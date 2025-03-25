@@ -52,3 +52,21 @@ def clean_body_content(body_content):
     except:
         return
 
+
+
+def scrape_website1(website):
+    options = Options()
+    options.add_argument("--headless") 
+    driver = webdriver.Chrome(options=options)
+    try:
+        driver.get(website)
+    except Exception as e:
+        return
+    html = driver.page_source
+    with open("output.txt", "w") as file:
+        file.write(clean_body_content(html))
+    return html
+
+
+
+scrape_website1("https://www.linkedin.com/company/jet-learn/")

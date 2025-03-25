@@ -6,7 +6,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 def rag(query):
-    loader = TextLoader('./output.txt')
+    loader = TextLoader('output.txt')
     documents = loader.load()
 
     embeddings = GPT4AllEmbeddings()
@@ -38,7 +38,7 @@ def rag(query):
         Based on the context above, please provide a detailed and precise answer to the question.
         """    
     print(prompt)
-
+    return prompt
 
 
 
