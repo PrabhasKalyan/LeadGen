@@ -63,10 +63,8 @@ def scrape_website1(website):
     except Exception as e:
         return
     html = driver.page_source
-    with open("output.txt", "w") as file:
+    with open("../output.txt", "w") as file:
         file.write(clean_body_content(html))
     return html
 
-
-
-scrape_website1("https://www.linkedin.com/company/jet-learn/")
+scrape_website1("https://www.linkedin.com/in/company/boston-consulting-group/")
