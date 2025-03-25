@@ -110,7 +110,7 @@ def search_agent(link,prompt):
 
 
 @app.post("/business_linkedin")
-def search_linkedin(link):
+def business_linkedin(link):
      prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
 
 
@@ -135,5 +135,30 @@ def search_linkedin(link):
      with open("output.txt", "w") as file:
         return info
 
+@app.post("personal_linkedin")
+def personal_linkedin(link):
+     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from the HTML of a LinkedIn personal profile page, extract and return the following details in a structured JSON format:  
+
+1. **Full Name**: The person's full name.  
+2. **Current Job Title**: Their current role/position.  
+3. **Current Company**: The company they are currently working at.  
+4. **Location**: Their current location (city, country).  
+5. **Industry**: The industry they work in.  
+6. **Education**: Their educational background.  
+7. **Connections Count**: Number of LinkedIn connections (e.g., 500+).  
+8. **Profile Summary**: A brief description of their professional background.  
+9. **Skills**: A list of key skills mentioned in their profile.  
+10. **Work Experience**: A structured list of past job roles, including company names, positions, and durations.  
+
+**Return `None` for any missing or unavailable data.**  
+
+**Format the output as JSON.**  
+"""
+     scrape_website1(link)
+     with open("output.txt", "r") as file:
+        text=file.read()
+     info=invoke_llm(text + prompt)
+     with open("output.txt", "w") as file:
+        return info
 
 
