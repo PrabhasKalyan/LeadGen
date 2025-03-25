@@ -13,6 +13,8 @@ from rag import rag
 from leadgen_agent import get_info
 from scrape import scrape_website1,clean_body_content
 
+from person_lookup import get_company,get_employees,get_linkedin,get_info,get_urls,no_urls
+
 os.environ["TAVILY_API_KEY"] = "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"
 
 client = OpenAI(
@@ -153,7 +155,7 @@ def personal_linkedin(link):
                 9. **Skills**: A list of key skills mentioned in their profile.  
                 10. **Work Experience**: A structured list of past job roles, including company names, positions, and durations.  
 
-                **Return `None` for any missing or unavailable data.**  
+                **Return `None` for any missing or unavailable data.**  strictly follow this don't give wrong information
 
                 **Format the output as JSON.**  
                 """
@@ -168,3 +170,12 @@ def personal_linkedin(link):
      return info
 
 
+@app.post("/personal_lookup")
+def personal_lookup(domain,title):
+    company = get_company(domain)
+    linkedin = get_linkedin(company)
+    # employees=get_employees(linkedin)
+    # n= no_urls(title,employees,company)
+    # link=get_urls(company,title)
+    info = personal_linkedin(linkedin)
+    return info

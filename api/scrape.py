@@ -3,12 +3,12 @@ from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnecti
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import os
-
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import Options
-
+import undetected_chromedriver as uc
 
 
 def scrape_website(website):
@@ -55,16 +55,19 @@ def clean_body_content(body_content):
 
 
 def scrape_website1(website):
-    options = Options()
-    options.add_argument("--headless") 
-    driver = webdriver.Chrome(options=options)
+    options = uc.ChromeOptions()
+    # options.add_argument("--headless")  
+    driver = uc.Chrome(options=options)
     try:
         driver.get(website)
     except Exception as e:
         return
     html = driver.page_source
-    with open("../output.txt", "w") as file:
+    with open("output.txt", "w") as file:
         file.write(clean_body_content(html))
+    time.sleep("1")
     return html
 
-scrape_website1("https://www.linkedin.com/in/company/boston-consulting-group/")
+
+
+scrape_website1("https://www.linkedin.com/in/janettewu")
