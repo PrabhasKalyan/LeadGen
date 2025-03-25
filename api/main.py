@@ -9,6 +9,8 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 import langgraph as lg
 from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
+from api.rag import rag
+from leadgen_agent import get_info
 
 os.environ["TAVILY_API_KEY"] = "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"
 
@@ -86,9 +88,9 @@ def start(prompt):
     print(output["messages"][-1].content)
     return output["messages"][-1].content
 
-@app.post("/scrape_agent")
-def scrape_agent(prompt):
-    prompt = prompt  + "\nAnalyze the following query and describe it in 20-25 words in breif and give only the answer and nothing else only the answer no explanations strictly"  
+
+def invoke_llm(prompt):
+    prompt = prompt  + "\nAnalyze the following query and describe it in 3-4 in breif and give only the answer and nothing else only the answer no explanations strictly"  
     response = client.chat.completions.create(
         model="llama3-8b-8192",
          messages=[
@@ -97,6 +99,12 @@ def scrape_agent(prompt):
     info =response.choices[0].message.content
     return info
 
+@app.post("/scrape_agent")
+def search_agent(link,prompt):
+    get_info(link,prompt)
+    invoke_llm(rag(prompt))
+    with open("output.txt", "w") as file:  # Open in write mode to overwrite contents
+            pass
 
 
 

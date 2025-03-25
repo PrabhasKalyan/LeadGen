@@ -2,8 +2,7 @@ import os
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import GPT4AllEmbeddings
-
-os.environ["OPENAI_API_KEY"]="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"
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 def rag(query):
@@ -12,15 +11,22 @@ def rag(query):
 
     embeddings = GPT4AllEmbeddings()
 
-    vectorstore = Chroma.from_documents(
-            documents,
-            embeddings
-            )
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,  # Set chunk size
+        chunk_overlap=50  # Optional overlap for better context continuity
+    )
+    split_docs = text_splitter.split_documents(documents)
 
-    query="What does this company do?"
+    embeddings = GPT4AllEmbeddings()
+
+    vectorstore = Chroma.from_documents(
+        split_docs,
+        embeddings
+    )
+    
 
     relevant_docs = vectorstore.similarity_search(query, k=3)
-    # llm = GPT4All(model="gpt-4o-mini")
+
 
     context = "\n\n".join([doc.page_content for doc in relevant_docs])
     prompt = f"""
@@ -35,6 +41,6 @@ def rag(query):
 
 
 
-rag("What does this company do?")
+
 
 
