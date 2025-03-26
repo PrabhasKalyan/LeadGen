@@ -9,3 +9,4 @@ fastapi
  selenium
  undetected-chromedriver
  bs4
+ disutils
