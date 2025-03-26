@@ -1,5 +1,8 @@
 {
     "version": 2,
+    "config": {
+        "runtime": "python3.8"
+      },
     "builds": [
       {
         "src": "api/main.py",
@@ -12,6 +15,7 @@
         "dest": "api/main.py"
       }
     ],
-    "buildCommand": "pip install -r requirements.txt"
+    "buildCommand": "pip install -r requirements.txt",
+    
   }
   
