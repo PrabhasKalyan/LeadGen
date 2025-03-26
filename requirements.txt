@@ -10,3 +10,4 @@ fastapi
  undetected-chromedriver
  bs4
  disutils
+ asyncio>=3.4.3 
