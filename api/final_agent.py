@@ -12,7 +12,7 @@ from langchain.schema import HumanMessage,AIMessage
 from .rag import rag
 from .scrape import scrape_website1
 from .person_lookup import get_employees
-
+from .main import personal_linkedin
 
 os.environ["TAVILY_API_KEY"] = "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"
 client = OpenAI(
@@ -96,7 +96,14 @@ def get_urls(state):
     return state
 
 def get_data(state):
-    pass
+    links = state["urls"]
+    data =[]
+    for link in links:
+        info=personal_linkedin(link)
+        data.append(info)
+    state = {"messgaes":state["message"],"data":data}
+    return state
+
 
 
 
@@ -124,8 +131,7 @@ def ai_agent(**kwargs):
     prompt =prompt = " ".join(f"{key}: {value}" for key, value in kwargs.items())
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
-    print(output["messages"][-1].content)
-    return output["messages"][-1].content
+    return output["data"]
 
 
 
