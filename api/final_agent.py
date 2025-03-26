@@ -14,6 +14,12 @@ from .scrape import scrape_website1
 from .person_lookup import get_employees
 from .main import personal_linkedin
 
+# from rag import rag
+# from scrape import scrape_website1
+# from person_lookup import get_employees
+# from main import personal_linkedin
+
+
 os.environ["TAVILY_API_KEY"] = "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"
 client = OpenAI(
     api_key="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",
@@ -21,21 +27,62 @@ client = OpenAI(
 )
 
 
+def invoke_llm(prompt):
+    prompt = prompt  + "\nAnalyze the following query and describe it in 3-4 in breif and give only the answer and nothing else only the answer no explanations strictly"  
+    response = client.chat.completions.create(
+        model="llama3-8b-8192",
+         messages=[
+        {"role": "user", "content":prompt}]
+        )
+    info =response.choices[0].message.content
+    return info
+def personal_linkedin(link):
+     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from the HTML of a LinkedIn personal profile page, extract and return the following details in a structured JSON format:  
+
+                1. **Full Name**: The person's full name.  
+                2. **Current Job Title**: Their current role/position.  
+                3. **Current Company**: The company they are currently working at.  
+                4. **Location**: Their current location (city, country).  
+                5. **Industry**: The industry they work in.  
+                6. **Education**: Their educational background.  
+                7. **Connections Count**: Number of LinkedIn connections (e.g., 500+).  
+                8. **Profile Summary**: A brief description of their professional background.  
+                9. **Skills**: A list of key skills mentioned in their profile.  
+                10. **Work Experience**: A structured list of past job roles, including company names, positions, and durations.  
+
+                **Return `None` for any missing or unavailable data.**  strictly follow this don't give wrong information
+
+                **Format the output as JSON.**  
+                """
+     with open("output.txt", "w") as file:
+        file.write("")
+     scrape_website1(link)
+     with open("output.txt", "r") as file:
+        text=file.read()
+     info=invoke_llm(text + prompt)
+    #  with open("../output.txt", "w") as file:
+    #      file.write("")
+     return info
+
 
 def get_companies(state):
-    company = f"{state["messages"][-1].content.prompt} in the following sector {state["messages"][-1].content.sector}"
+    in_put =  json.loads(state["messages"][-1].content)
+    print(in_put)
+    company = f"{in_put["prompt"]} in the following sector {in_put["sector"]}"
     search = TavilySearchResults(max_results=5)
     results = search.invoke(company)
     urls = [result["url"] for result in results]
     companies = [url.split(".")[1] for url in urls]
     state={"messages": state["messages"], "companies": companies,"domains":urls}
+    print(state)
     return state
 
 
 def get_summary(state):
     unfiltered_domains = state["domains"]
-    purpose = state["messages"][-1].content.prompt
-    sector = state["messages"][-1].content.sector
+    in_put =  json.loads(state["messages"][-1].content)
+    purpose = in_put["prompt"]
+    sector = in_put["sector"]
     domains =[]
     for domain in unfiltered_domains:
         scrape_website1(domain)
@@ -54,6 +101,7 @@ def get_summary(state):
     
     companies = [url.split(".")[1] for url in domains]
     state={"messages": state["messages"], "companies": companies,"domains":domains}  
+    print(state)
     return state      
 
 
@@ -62,6 +110,7 @@ def get_linkedin_company(state):
     search = TavilySearchResults(max_results=1)
     linkedin = [search.invoke("site:linkedin.com{company}") for company in state["companies"] ]
     state = {"messages": state["messages"], "linkedin_company": linkedin}
+    print(state)
     return state
 
 
@@ -69,7 +118,8 @@ def employees(state):
     pass
 
 def no_urls(state):
-    title = state["messages"][-1].content.title
+    in_put =  json.loads(state["messages"][-1].content)
+    title = in_put["title"]
     companies = [company for company in state["companies"]]
     no_of_employees={}
     for company in companies:
@@ -80,11 +130,13 @@ def no_urls(state):
             {"role": "user", "content":prompt}]
             )
         no_of_employees[company]=response.choices[0].message.content
+    print(state)
     state = {"messgaes":state["messgaes"],"no_of_employees":no_of_employees}
 
 def get_urls(state):
     no_of_employees = state["no_of_employees"]
-    title = state["messages"][-1].content.title
+    in_put =  json.loads(state["messages"][-1].content)
+    title = in_put['title']
     data = []
     for employee in no_of_employees:
         search = TavilySearchResults(max_results=employee.value)
@@ -93,6 +145,7 @@ def get_urls(state):
         data.append(results)
     urls =[result["url"] for result in data]
     state = {"messgaes":state["message"],"urls":urls}
+    print(state)
     return state
 
 def get_data(state):
@@ -102,6 +155,7 @@ def get_data(state):
         info=personal_linkedin(link)
         data.append(info)
     state = {"messgaes":state["message"],"data":data}
+    print(state)
     return state
 
 
@@ -128,10 +182,11 @@ workflow_app=workflow.compile()
 
 
 def ai_agent(**kwargs):
-    prompt =prompt = " ".join(f"{key}: {value}" for key, value in kwargs.items())
+    # prompt = {key: value for key, value in kwargs.items()}
+    prompt = json.dumps(kwargs)
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
-    return output["data"]
+    # return output["data"]
 
 
 

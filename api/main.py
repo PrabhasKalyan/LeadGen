@@ -12,10 +12,14 @@ from langchain.schema import HumanMessage,AIMessage
 from .rag import rag
 from .leadgen_agent import get_info
 from .scrape import scrape_website1,clean_body_content
-
 from .person_lookup import get_company,get_employees,get_linkedin,get_info,get_urls,no_urls
-
 from .final_agent import ai_agent
+
+# from rag import rag
+# from leadgen_agent import get_info
+# from scrape import scrape_website1,clean_body_content
+# from person_lookup import get_company,get_employees,get_linkedin,get_info,get_urls,no_urls
+# from final_agent import ai_agent
 
 os.environ["TAVILY_API_KEY"] = "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"
 
@@ -185,6 +189,6 @@ def personal_lookup(domain,title):
 
 
 @app.post("/agent")
-def agent(**kwargs):
-    data=ai_agent(kwargs)
+def agent(sector, prompt, title):
+    data=ai_agent(sector=sector,prompt=prompt,title=title)
     return data
