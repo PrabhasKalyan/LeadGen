@@ -6,3 +6,5 @@ gspread
 dotenv
 python-dotenv
 langchain_community
+selenium
+undetected-chromedriver
