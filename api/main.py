@@ -9,11 +9,13 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 import langgraph as lg
 from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
-from rag import rag
-from leadgen_agent import get_info
-from scrape import scrape_website1,clean_body_content
+from .rag import rag
+from .leadgen_agent import get_info
+from .scrape import scrape_website1,clean_body_content
 
-from person_lookup import get_company,get_employees,get_linkedin,get_info,get_urls,no_urls
+from .person_lookup import get_company,get_employees,get_linkedin,get_info,get_urls,no_urls
+
+from .final_agent import ai_agent
 
 os.environ["TAVILY_API_KEY"] = "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"
 
@@ -130,10 +132,10 @@ def business_linkedin(link):
 
                 return only if the answer is known else return None
 **Format the output as json**:"""
-     with open("../output.txt", "w") as file:
+     with open("output.txt", "w") as file:
         file.write("")
      scrape_website1(link)
-     with open("../output.txt", "r") as file:
+     with open("output.txt", "r") as file:
         text=file.read()
      info=invoke_llm(text + prompt)
     #  with open("../output.txt", "w") as file:
@@ -159,10 +161,10 @@ def personal_linkedin(link):
 
                 **Format the output as JSON.**  
                 """
-     with open("../output.txt", "w") as file:
+     with open("output.txt", "w") as file:
         file.write("")
      scrape_website1(link)
-     with open("../output.txt", "r") as file:
+     with open("output.txt", "r") as file:
         text=file.read()
      info=invoke_llm(text + prompt)
     #  with open("../output.txt", "w") as file:
@@ -179,3 +181,10 @@ def personal_lookup(domain,title):
     # link=get_urls(company,title)
     info = personal_linkedin(linkedin)
     return info
+
+
+
+@app.post("/agent")
+def agent(**kwargs):
+    data=ai_agent(kwargs)
+    return data

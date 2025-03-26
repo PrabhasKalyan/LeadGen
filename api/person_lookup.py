@@ -11,7 +11,7 @@ from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
 from rag import rag
 from leadgen_agent import get_info
-from scrape import scrape_website1,clean_body_content
+from .scrape import scrape_website1,clean_body_content
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -50,10 +50,10 @@ def get_linkedin(company):
 
 
 def get_employees(url):
-    options = uc.ChromeOptions()
+    options = Options()
+    options.add_argument("--incognito")
     options.add_argument("--headless")  
-    driver = uc.Chrome(options=options)
-    
+    driver =  webdriver.Chrome(options=options)
     try:
         driver.get(url)
         employs = driver.find_element(By.XPATH, "//*[@data-test-id='about-us__size']").text

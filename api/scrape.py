@@ -55,9 +55,10 @@ def clean_body_content(body_content):
 
 
 def scrape_website1(website):
-    options = uc.ChromeOptions()
-    # options.add_argument("--headless")  
-    driver = uc.Chrome(options=options)
+    options = ChromeOptions()
+    options.add_argument("--incognito")
+    options.add_argument("--headless")  
+    driver = webdriver.Chrome(options=options)
     try:
         driver.get(website)
     except Exception as e:
@@ -65,9 +66,6 @@ def scrape_website1(website):
     html = driver.page_source
     with open("output.txt", "w") as file:
         file.write(clean_body_content(html))
-    time.sleep("1")
     return html
 
 
-
-scrape_website1("https://www.linkedin.com/in/janettewu")
