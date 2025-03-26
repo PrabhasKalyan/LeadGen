@@ -1,13 +1,14 @@
+python-3.9
 fastapi
- langgraph
- openai
- langchain
- gspread
- dotenv
- python-dotenv
- langchain_community
- selenium
- undetected-chromedriver
- bs4
- disutils
- asyncio>=3.4.3 
+langgraph
+openai
+langchain
+gspread
+dotenv
+python-dotenv
+langchain_community
+selenium
+undetected-chromedriver
+bs4
+disutils
+asyncio>=3.4.3 
