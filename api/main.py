@@ -94,97 +94,97 @@ def start(prompt):
     return output["messages"][-1].content
 
 
-def invoke_llm(prompt):
-    prompt = prompt  + "\nAnalyze the following query and describe it in 3-4 in breif and give only the answer and nothing else only the answer no explanations strictly"  
-    response = client.chat.completions.create(
-        model="llama3-8b-8192",
-         messages=[
-        {"role": "user", "content":prompt}]
-        )
-    info =response.choices[0].message.content
-    return info
+# def invoke_llm(prompt):
+#     prompt = prompt  + "\nAnalyze the following query and describe it in 3-4 in breif and give only the answer and nothing else only the answer no explanations strictly"  
+#     response = client.chat.completions.create(
+#         model="llama3-8b-8192",
+#          messages=[
+#         {"role": "user", "content":prompt}]
+#         )
+#     info =response.choices[0].message.content
+#     return info
 
-@app.post("/scrape_agent")
-def search_agent(link,prompt):
-    get_info(link,prompt)
-    invoke_llm(rag(prompt))
-    with open("output.txt", "w") as file:  # Open in write mode to overwrite contents
-            pass
-
-
-
-@app.post("/business_linkedin")
-def business_linkedin(link):
-     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
-
-
-1. **Company Name**: Extract the official name of the company.
-2. **LinkedIn URL**: The URL of the company's LinkedIn page.
-3. **Website URL**: The official website of the company.
-4. **Industry**: The industry the company operates in.
-5. **Company Size**: The number of employees (range, e.g., "51-200").
-6. **Headquarters**: The location of the company’s headquarters.
-7. **Year Founded**: The year the company was established.
-8. **Company Type**: Whether it is a private, public, non-profit, etc.
-9. **Company Description**: A short summary of what the company does.
-10. **Specialties**: Key areas the company specializes in.
-11. **Employee Count on LinkedIn**: The number of employees listed on LinkedIn not follower like(eg.View all 173 employees)).
-
-                return only if the answer is known else return None
-**Format the output as json**:"""
-     with open("output.txt", "w") as file:
-        file.write("")
-     scrape_website1(link)
-     with open("output.txt", "r") as file:
-        text=file.read()
-     info=invoke_llm(text + prompt)
-    #  with open("../output.txt", "w") as file:
-    #     pass
-     return info
-
-@app.post("/personal_linkedin")
-def personal_linkedin(link):
-     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from the HTML of a LinkedIn personal profile page, extract and return the following details in a structured JSON format:  
-
-                1. **Full Name**: The person's full name.  
-                2. **Current Job Title**: Their current role/position.  
-                3. **Current Company**: The company they are currently working at.  
-                4. **Location**: Their current location (city, country).  
-                5. **Industry**: The industry they work in.  
-                6. **Education**: Their educational background.  
-                7. **Connections Count**: Number of LinkedIn connections (e.g., 500+).  
-                8. **Profile Summary**: A brief description of their professional background.  
-                9. **Skills**: A list of key skills mentioned in their profile.  
-                10. **Work Experience**: A structured list of past job roles, including company names, positions, and durations.  
-
-                **Return `None` for any missing or unavailable data.**  strictly follow this don't give wrong information
-
-                **Format the output as JSON.**  
-                """
-     with open("output.txt", "w") as file:
-        file.write("")
-     scrape_website1(link)
-     with open("output.txt", "r") as file:
-        text=file.read()
-     info=invoke_llm(text + prompt)
-    #  with open("../output.txt", "w") as file:
-    #      file.write("")
-     return info
-
-
-@app.post("/personal_lookup")
-def personal_lookup(domain,title):
-    company = get_company(domain)
-    linkedin = get_linkedin(company)
-    # employees=get_employees(linkedin)
-    # n= no_urls(title,employees,company)
-    # link=get_urls(company,title)
-    info = personal_linkedin(linkedin)
-    return info
+# @app.post("/scrape_agent")
+# def search_agent(link,prompt):
+#     get_info(link,prompt)
+#     invoke_llm(rag(prompt))
+#     with open("output.txt", "w") as file:  # Open in write mode to overwrite contents
+#             pass
 
 
 
-@app.post("/agent")
-def agent(**kwargs):
-    data=ai_agent(kwargs)
-    return data
+# @app.post("/business_linkedin")
+# def business_linkedin(link):
+#      prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
+
+
+# 1. **Company Name**: Extract the official name of the company.
+# 2. **LinkedIn URL**: The URL of the company's LinkedIn page.
+# 3. **Website URL**: The official website of the company.
+# 4. **Industry**: The industry the company operates in.
+# 5. **Company Size**: The number of employees (range, e.g., "51-200").
+# 6. **Headquarters**: The location of the company’s headquarters.
+# 7. **Year Founded**: The year the company was established.
+# 8. **Company Type**: Whether it is a private, public, non-profit, etc.
+# 9. **Company Description**: A short summary of what the company does.
+# 10. **Specialties**: Key areas the company specializes in.
+# 11. **Employee Count on LinkedIn**: The number of employees listed on LinkedIn not follower like(eg.View all 173 employees)).
+
+#                 return only if the answer is known else return None
+# **Format the output as json**:"""
+#      with open("output.txt", "w") as file:
+#         file.write("")
+#      scrape_website1(link)
+#      with open("output.txt", "r") as file:
+#         text=file.read()
+#      info=invoke_llm(text + prompt)
+#     #  with open("../output.txt", "w") as file:
+#     #     pass
+#      return info
+
+# @app.post("/personal_linkedin")
+# def personal_linkedin(link):
+#      prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from the HTML of a LinkedIn personal profile page, extract and return the following details in a structured JSON format:  
+
+#                 1. **Full Name**: The person's full name.  
+#                 2. **Current Job Title**: Their current role/position.  
+#                 3. **Current Company**: The company they are currently working at.  
+#                 4. **Location**: Their current location (city, country).  
+#                 5. **Industry**: The industry they work in.  
+#                 6. **Education**: Their educational background.  
+#                 7. **Connections Count**: Number of LinkedIn connections (e.g., 500+).  
+#                 8. **Profile Summary**: A brief description of their professional background.  
+#                 9. **Skills**: A list of key skills mentioned in their profile.  
+#                 10. **Work Experience**: A structured list of past job roles, including company names, positions, and durations.  
+
+#                 **Return `None` for any missing or unavailable data.**  strictly follow this don't give wrong information
+
+#                 **Format the output as JSON.**  
+#                 """
+#      with open("output.txt", "w") as file:
+#         file.write("")
+#      scrape_website1(link)
+#      with open("output.txt", "r") as file:
+#         text=file.read()
+#      info=invoke_llm(text + prompt)
+#     #  with open("../output.txt", "w") as file:
+#     #      file.write("")
+#      return info
+
+
+# @app.post("/personal_lookup")
+# def personal_lookup(domain,title):
+#     company = get_company(domain)
+#     linkedin = get_linkedin(company)
+#     # employees=get_employees(linkedin)
+#     # n= no_urls(title,employees,company)
+#     # link=get_urls(company,title)
+#     info = personal_linkedin(linkedin)
+#     return info
+
+
+
+# @app.post("/agent")
+# def agent(**kwargs):
+#     data=ai_agent(kwargs)
+#     return data
