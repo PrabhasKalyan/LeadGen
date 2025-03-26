@@ -15,7 +15,7 @@ from langchain.schema import HumanMessage,AIMessage
 # from .main import personal_linkedin
 
 from rag import rag
-from scrape import scrape_website1
+from scrape import scrape_website1,extract_body_content,clean_body_content,scrape_website
 from person_lookup import get_employees
 # from main import personal_linkedin
 
@@ -68,11 +68,11 @@ def personal_linkedin(link):
 def get_companies(state):
     in_put =  json.loads(state["messages"][-1].content)
     print(in_put)
-    company = f"{in_put["prompt"]} in the following sector {in_put["sector"]}"
+    company = f'List of the companies in the following sector {in_put["sector"]} related to the {in_put["prompt"]} '
     search = TavilySearchResults(max_results=5)
     results = search.invoke(company)
     urls = [result["url"] for result in results]
-    companies = [url.split(".")[1] for url in urls]
+    companies = [url.split("/")[2].split(".")[1] for url in urls if "linkedin.com/company" in url]
     state={"messages": state["messages"], "companies": companies,"domains":urls}
     print(state)
     return state
@@ -85,7 +85,8 @@ def get_summary(state):
     sector = in_put["sector"]
     domains =[]
     for domain in unfiltered_domains:
-        scrape_website1(domain)
+        with open("output.txt", "w") as file:
+            file.write(clean_body_content(extract_body_content(scrape_website(domain))))
         with open("output.txt") as f:
             text = f.read()
         prompt = f"Does {domain} actively work on {purpose} in the {sector} industry? Answer strictly 'YES' or 'NO' based on publicly available information."
@@ -99,8 +100,10 @@ def get_summary(state):
         else:
             pass
     
-    companies = [url.split(".")[1] for url in domains]
-    state={"messages": state["messages"], "companies": companies,"domains":domains}  
+    companies = [url.split("/")[2].split(".")[1] for url in domains]
+    # state={"messages": state["messages"], "companies": companies,"domains":domains}  
+    state["companies"] = companies
+    state["domains"] = domains
     print(state)
     return state      
 
@@ -108,8 +111,9 @@ def get_summary(state):
 
 def get_linkedin_company(state):
     search = TavilySearchResults(max_results=1)
-    linkedin = [search.invoke("site:linkedin.com{company}") for company in state["companies"] ]
-    state = {"messages": state["messages"], "linkedin_company": linkedin}
+    linkedin = [result["url"] for company in state["companies"]
+                for result in search.invoke(f"site:linkedin.com {company}") ]
+    state["linkedin_company"]=linkedin
     print(state)
     return state
 
@@ -123,28 +127,30 @@ def no_urls(state):
     companies = [company for company in state["companies"]]
     no_of_employees={}
     for company in companies:
-        prompt = f"Give me the possible no.of people that could be possible for the given designition {title} at {company} . Just give me the number and nothing else just number"
+        prompt = f"Give me the possible no.of people that could be possible for the given designition {title} at {company} . Just give me the number and nothing else just number and exact number linke 5"
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
             {"role": "user", "content":prompt}]
             )
         no_of_employees[company]=response.choices[0].message.content
+    state["no_of_employees"]=no_of_employees
     print(state)
-    state = {"messgaes":state["messgaes"],"no_of_employees":no_of_employees}
+    return state
 
 def get_urls(state):
     no_of_employees = state["no_of_employees"]
     in_put =  json.loads(state["messages"][-1].content)
     title = in_put['title']
     data = []
-    for employee in no_of_employees:
-        search = TavilySearchResults(max_results=employee.value)
-        prompt=f"site:linkedin.com/in {title} {employee}"
+    for key,employee in no_of_employees.items():
+        search = TavilySearchResults(max_results=int(employee))
+        prompt=f"site:linkedin.com/in {title} {key}"
         results=search.invoke(prompt)
-        data.append(results)
+        data.extend(results) 
     urls =[result["url"] for result in data]
-    state = {"messgaes":state["message"],"urls":urls}
+    # state = {"messgaes":state["message"],"urls":urls}
+    state["urls"]=urls
     print(state)
     return state
 
@@ -154,7 +160,8 @@ def get_data(state):
     for link in links:
         info=personal_linkedin(link)
         data.append(info)
-    state = {"messgaes":state["message"],"data":data}
+    # state = {"messgaes":state["message"],"data":data}
+    state["data"]=data
     print(state)
     return state
 
@@ -172,6 +179,7 @@ workflow.add_node("get_data",get_data)
 
 workflow.set_entry_point("get_companies")
 workflow.add_edge("get_companies", "get_summary")
+workflow.add_edge("get_summary", "get_linkedin_company")
 workflow.add_edge("get_linkedin_company", "no_urls")
 workflow.add_edge("no_urls", "get_urls")
 workflow.add_edge("get_urls", "get_data")
@@ -186,7 +194,7 @@ def ai_agent(**kwargs):
     prompt = json.dumps(kwargs)
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
-    # return output["data"]
+    return output["data"]
 
 
 

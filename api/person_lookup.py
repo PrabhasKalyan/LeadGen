@@ -11,8 +11,8 @@ from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
 from rag import rag
 from leadgen_agent import get_info
-from .scrape import scrape_website1,clean_body_content
-# from scrape import scrape_website1,clean_body_content
+# from .scrape import scrape_website1,clean_body_content
+from scrape import scrape_website1,clean_body_content
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import Options

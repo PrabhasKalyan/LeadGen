@@ -14,6 +14,7 @@ import undetected_chromedriver as uc
 def scrape_website(website):
     options = Options()
     options.add_argument("--headless") 
+    options.add_argument("--incognito")
     driver = webdriver.Chrome(options=options)
     try:
         driver.get(website)
