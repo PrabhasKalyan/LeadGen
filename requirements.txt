@@ -103,7 +103,7 @@ msgpack==1.1.0
 multidict==6.2.0
 mypy-extensions==1.0.0
 # nest_asyncio @ file:///home/conda/feedstock_root/build_artifacts/nest-asyncio_1733325553580/work
-networkx==3.4.2
+networkx==2.5
 nltk==3.9.1
 numpy==2.2.4
 oauthlib==3.2.2
