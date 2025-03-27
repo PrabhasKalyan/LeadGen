@@ -198,4 +198,4 @@ def ai_agent(**kwargs):
 
 
 
-ai_agent(title="Founder",prompt="Hiring interns",sector="AI India")
+# ai_agent(title="Founder",prompt="Hiring interns",sector="AI India")
