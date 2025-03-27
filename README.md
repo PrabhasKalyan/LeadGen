@@ -62,8 +62,7 @@ A brief description of what your project does and its purpose.
    pip install -r requirements.txt
    ```
 4. Run the project:
-   ```cd api
-      favicorn main:app --reload
+   ```cd api   favicorn main:app --reload
    ```
 
 
@@ -72,7 +71,7 @@ A brief description of what your project does and its purpose.
 ## 📬 Contact
 For any queries, feel free to reach out:
 - **Email**: prabhakalyan0473@gmail.com
-- **LinkedIn**: [Your Name](https://www.linkedin.com/in/PrabhasKalyan)
+- **LinkedIn**: [PrabhasKalyan](https://www.linkedin.com/in/PrabhasKalyan)
 
 ---
 
