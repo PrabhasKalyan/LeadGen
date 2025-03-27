@@ -45,9 +45,9 @@ A brief description of what your project does and its purpose.
 - **Database**: Chroma DB for rag
 
 ## 📷 Screenshots
-![Screenshot](Screenshot 2025-03-27 at 5.43.26 PM.png)
-![Screenshot](Screenshot 2025-03-27 at 5.45.14 PM.png)
-![Screenshot](Screenshot 2025-03-27 at 5.49.44 PM.png)
+![Screenshot](https://github.com/PrabhasKalyan/LeadGen/blob/main/Screenshot%202025-03-27%20at%205.43.26%E2%80%AFPM.png?raw=true)
+![Screenshot](https://github.com/PrabhasKalyan/LeadGen/blob/main/Screenshot%202025-03-27%20at%205.45.14%E2%80%AFPM.png?raw=true)
+![Screenshot](https://github.com/PrabhasKalyan/LeadGen/blob/main/Screenshot%202025-03-27%20at%205.49.44%E2%80%AFPM.png?raw=true)
 ## 🔧 Installation
 1. Clone the repository:
    ```bash
