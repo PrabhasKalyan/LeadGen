@@ -72,7 +72,7 @@ def get_companies(state):
     search = TavilySearchResults(max_results=5)
     results = search.invoke(company)
     urls = [result["url"] for result in results]
-    companies = [url.split("/")[2].split(".")[1] for url in urls if "linkedin.com/company" in url]
+    companies = [url.split("/")[2].split(".")[1] for url in urls]
     state={"messages": state["messages"], "companies": companies,"domains":urls}
     print(state)
     return state
@@ -198,3 +198,4 @@ def ai_agent(**kwargs):
 
 
 
+ai_agent(title="Founder",prompt="Hiring interns",sector="AI India")
