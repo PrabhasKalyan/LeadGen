@@ -62,9 +62,11 @@ A brief description of what your project does and its purpose.
    pip install -r requirements.txt
    ```
 4. Run the project:
-   ```cd api
+   ```bash
+      cd api
    ```
-   ```favicorn main:app --reload
+   ```bash
+      favicorn main:app --reload
    ```
 
 
