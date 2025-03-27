@@ -55,14 +55,15 @@ A brief description of what your project does and its purpose.
    ```
 2. Navigate to the project directory:
    ```bash
-   cd api
+   cd LeadGen
    ```
 3. Install dependencies:
    ```bash
-   favicorn main:app --reload
+   pip install -r requirements.txt
    ```
 4. Run the project:
-   ```copy the script provided and paste in apps script
+   ```cd api
+      favicorn main:app --reload
    ```
 
 
