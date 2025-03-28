@@ -52,12 +52,12 @@ def scrape(link,query):
 
 def get_info(link,query):
     info = ""
-    for lin in scrape(link,query):
-        web_data = clean_body_content(extract_body_content(scrape_website(lin)))
-        if web_data:
-            info = info +web_data
-        else:
-            pass
+    # for lin in scrape(link,query):
+    web_data = clean_body_content(extract_body_content(scrape_website(link)))
+    if web_data:
+        info = info +web_data
+    else:
+        pass
     with open("output.txt", "w") as file:
         file.write(info)
 

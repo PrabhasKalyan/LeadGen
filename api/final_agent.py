@@ -10,7 +10,7 @@ import langgraph as lg
 from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
 from .rag import rag
-from .scrape import scrape_website1
+from .scrape import scrape_website1,scrape_website,extract_body_content,clean_body_content
 from .person_lookup import get_employees
 
 
