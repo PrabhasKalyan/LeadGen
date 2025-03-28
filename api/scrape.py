@@ -8,15 +8,20 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import Options
-
-
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 def scrape_website(website):
     options = Options()
     options.add_argument("--headless") 
     options.add_argument("--incognito")
-    driver = webdriver.Chrome(options=options)
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--remote-debugging-port=9222')
+    
     try:
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(options=options,service=service)
         driver.get(website)
     except Exception as e:
         return
@@ -58,9 +63,14 @@ def clean_body_content(body_content):
 def scrape_website1(website):
     options = ChromeOptions()
     options.add_argument("--incognito")
-    options.add_argument("--headless")  
-    driver = webdriver.Chrome(options=options)
+    options.add_argument("--headless")
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--remote-debugging-port=9222')  
     try:
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(options=options,service=service)
+        driver.get(website)
         driver.get(website)
     except Exception as e:
         return
