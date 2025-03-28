@@ -112,10 +112,11 @@ def invoke_llm(prompt):
 @app.post("/scrape_agent")
 def search_agent(link,prompt):
     get_info(link,prompt)
-    invoke_llm(rag(prompt))
+    ans=invoke_llm(rag(prompt))
     with open("output.txt", "w") as file:  # Open in write mode to overwrite contents
             pass
 
+    return ans
 
 
 # @app.post("/business_linkedin")
