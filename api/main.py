@@ -11,7 +11,7 @@ from langgraph.graph import Graph,END
 from langchain.schema import HumanMessage,AIMessage
 
 from .rag import rag
-from .scrape import scrape_website1
+from .scrape import scrape_website1,business,about
 from .person_lookup import get_company,get_employees,get_linkedin,get_urls,no_urls
 from .final_agent import ai_agent
 from .leadgen_agent import get_info
@@ -118,34 +118,57 @@ def search_agent(link,prompt):
 
 
 
+# @app.post("/business_linkedin")
+# def business_linkedin(link):
+#      prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
+
+
+# 1. **Company Name**: Extract the official name of the company.
+# 2. **LinkedIn URL**: The URL of the company's LinkedIn page.
+# 3. **Website URL**: The official website of the company.
+# 4. **Industry**: The industry the company operates in.
+# 5. **Company Size**: The number of employees (range, e.g., "51-200").
+# 6. **Headquarters**: The location of the company’s headquarters.
+# 7. **Year Founded**: The year the company was established.
+# 8. **Company Type**: Whether it is a private, public, non-profit, etc.
+# 9. **Company Description**: A short summary of what the company does.
+# 10. **Specialties**: Key areas the company specializes in.
+# 11. **Employee Count on LinkedIn**: The number of employees listed on LinkedIn not follower like(eg.View all 173 employees)).
+
+#                 return only if the answer is known else return None
+# **Format the output as json**:[
+#     "Company Name",
+#     "LinkedIn URL",
+#     "Website URL",
+#     "Industry",
+#     "Company Size",
+#     "Headquarters",
+#     "Year Founded",
+#     "Company Type",
+#     "Company Description",
+#     "Employee Count on LinkedIn"
+# ]
+
+# strictly i want json format
+# """
+#      with open("output.txt", "w") as file:
+#         file.write("")
+#      scrape_website1(link)
+#      with open("output.txt", "r") as file:
+#         text=file.read()
+#      info=invoke_llm(text + prompt)
+#     #  with open("../output.txt", "w") as file:
+#     #     pass
+#      return info
+
 @app.post("/business_linkedin")
 def business_linkedin(link):
-     prompt ="""You are an AI expert in structuring business data. Given the raw text scraped from HTML of a LinkedIn company page, extract and return the following details in a structured json format:
+    data=business(link)
+    about_data=about(link)
+    # data.append(invoke_llm(f"{about_data} from this data summarise the about_info in 10 words. just return the summary and nothing else"))
+    return data
 
 
-1. **Company Name**: Extract the official name of the company.
-2. **LinkedIn URL**: The URL of the company's LinkedIn page.
-3. **Website URL**: The official website of the company.
-4. **Industry**: The industry the company operates in.
-5. **Company Size**: The number of employees (range, e.g., "51-200").
-6. **Headquarters**: The location of the company’s headquarters.
-7. **Year Founded**: The year the company was established.
-8. **Company Type**: Whether it is a private, public, non-profit, etc.
-9. **Company Description**: A short summary of what the company does.
-10. **Specialties**: Key areas the company specializes in.
-11. **Employee Count on LinkedIn**: The number of employees listed on LinkedIn not follower like(eg.View all 173 employees)).
-
-                return only if the answer is known else return None
-**Format the output as json**:"""
-     with open("output.txt", "w") as file:
-        file.write("")
-     scrape_website1(link)
-     with open("output.txt", "r") as file:
-        text=file.read()
-     info=invoke_llm(text + prompt)
-    #  with open("../output.txt", "w") as file:
-    #     pass
-     return info
 
 @app.post("/personal_linkedin")
 def personal_linkedin(link):
