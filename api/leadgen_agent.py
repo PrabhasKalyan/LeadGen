@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import Options
 
 from .scrape import scrape_website,extract_body_content,clean_body_content
-
+from urllib.parse import urljoin
 # from scrape import scrape_website,extract_body_content,clean_body_content
 import requests
 from bs4 import BeautifulSoup
@@ -25,27 +25,31 @@ client = OpenAI(
 search = TavilySearchResults(max_results=2)
 app=FastAPI()
 
-options = Options()
-options.add_argument("--headless") 
-driver = webdriver.Chrome(options=options)
+# options = Options()
+# options.add_argument("--headless") 
+# driver = webdriver.Chrome(options=options)
 
 
 
 def scrape(link,query):
     response = requests.get(link)
     soup = BeautifulSoup(response.text, "html.parser")
-    driver.implicitly_wait(5)
     elements = soup.find_all("a")
     other_links=[]
     for ele in elements:
-        prompt = f"This is the text inside the anchortag analyse the text and tell me if it is usful to answer the query if it may have any useful info in the respective link.Link:{ele.get_text} and query:{query}. If yes I scrape the particular link and analyse the data so dont hesitate to say no as it saves a lot of time. Answer only Yes or No no further explanations requiered in strict"
+        text = ele.get_text().strip()
+        if not ele.get("href"):
+            continue
+        prompt = f"This is the text inside the anchortag analyse the text and tell me if it is usful to answer the query if it may have any useful info in the respective link.Link:{text} and query:{query}. If yes I scrape the particular link and analyse the data so dont hesitate to say no as it saves a lot of time. Answer only Yes or No no further explanations requiered in strict"
         response = client.chat.completions.create(
         model="llama3-8b-8192",
-         messages=[
+        messages=[
         {"role": "user", "content":prompt}]
         )
         if response.choices[0].message.content=="Yes":
-            other_links.append(ele.get("href"))
+            url = urljoin(link, ele.get("href"))
+            other_links.append(url)
+            
     return other_links
 
 
@@ -55,11 +59,13 @@ def scrape(link,query):
 def get_info(link,query):
     info = ""
     links=scrape(link,query)
+    print(links)
     web_data = clean_body_content(extract_body_content(scrape_website(link)))
     info = info +web_data
     for lin in links :
         web_data = clean_body_content(extract_body_content(scrape_website(lin)))
-        info = info +web_data
+        if web_data:
+            info = info +web_data
     with open("output.txt", "w") as file:
         file.write(info)
 

@@ -157,9 +157,9 @@ def get_urls(state):
 def get_data(state):
     links = state["urls"]
     data =[]
-    for link in links:
-        info=personal_linkedin(link)
-        data.append(info)
+    # for link in links:
+    #     info=personal_linkedin(link)
+    #     data.append(info)
     # state = {"messgaes":state["message"],"data":data}
     state["data"]=data
     print(state)
@@ -194,7 +194,7 @@ def ai_agent(**kwargs):
     prompt = json.dumps(kwargs)
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
-    return output["data"]
+    return output["url"]
 
 
 
