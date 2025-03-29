@@ -68,7 +68,7 @@ def generate_query(state):
     in_put =  json.loads(state["messages"][-1].content)
     sector = in_put["sector"]
     purpose = in_put["prompt"]
-    prompt=f"Generate a Google search query to find a list of companies in the {sector} sector for the purpose of {purpose}. Ensure that the query excludes blogs, posts, and general articles, focusing only on company listings. The search query should be structured for web scraping to extract company names."
+    prompt=f"Generate a Google search query to find a list of companies in the {sector} sector for the purpose of {purpose}. Ensure that the query excludes blogs, posts, and general articles, focusing only on company listings. The search query should be structured for web scraping to extract company names.And set region to india"
     response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
@@ -82,9 +82,8 @@ def generate_query(state):
 
 def get_companies(state):
     query=state["query"] 
-    company = query
-    search = TavilySearchResults(max_results=5)
-    results = search.invoke(company)
+    search = TavilySearchResults(max_results=10)
+    results = search.invoke(query)
     urls = [result["url"] for result in results]
     companies = [url.split("/")[2].split(".")[1] for url in urls]
     state={"messages": state["messages"], "companies": companies,"domains":urls}

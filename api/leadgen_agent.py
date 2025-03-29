@@ -40,7 +40,7 @@ def scrape(link,query):
         text = ele.get_text().strip()
         if not ele.get("href"):
             continue
-        prompt = f"This is the text inside the anchortag analyse the text and tell me if it is usful to answer the query if it may have any useful info in the respective link.Link:{text} and query:{query}. If yes I scrape the particular link and analyse the data so dont hesitate to say no as it saves a lot of time. Answer only Yes or No no further explanations requiered in strict"
+        prompt = f"This is the text inside the anchortag analyse the text and tell me if it is usful to answer the query if it may have any useful info in the respective link.Link:{text} and query:{query}. If yes I scrape the particular link and analyse the data so dont hesitate to say no as it saves a lot of time and say No to social media links and anything which can have probabiblity to generate a wrong answer. Answer only Yes or No no further explanations requiered in strict"
         response = client.chat.completions.create(
         model="llama3-8b-8192",
         messages=[
