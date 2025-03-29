@@ -64,11 +64,25 @@ def personal_linkedin(link):
     #      file.write("")
      return info
 
+def generate_query(state):
+    in_put =  json.loads(state["messages"][-1].content)
+    sector = in_put["sector"]
+    purpose = in_put["purpose"]
+    prompt=f"Generate a Google search query to find a list of companies in the {sector} sector for the purpose of {purpose}. Ensure that the query excludes blogs, posts, and general articles, focusing only on company listings. The search query should be structured for web scraping to extract company names."
+    response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+            {"role": "user", "content":prompt}]
+            )
+    query = response.choices[0].message.content
+    state["query"] = query
+    return state
+
+
 
 def get_companies(state):
-    in_put =  json.loads(state["messages"][-1].content)
-    print(in_put)
-    company = f'List of the companies in the following sector {in_put["sector"]} related to the {in_put["prompt"]} '
+    query=state["query"] 
+    company = query
     search = TavilySearchResults(max_results=5)
     results = search.invoke(company)
     urls = [result["url"] for result in results]
@@ -170,6 +184,7 @@ def get_data(state):
 
 
 workflow = Graph()
+workflow.add_node("generate_query",generate_query)
 workflow.add_node("get_companies",get_companies)
 workflow.add_node("get_summary",get_summary)
 workflow.add_node("get_linkedin_company",get_linkedin_company)
@@ -177,7 +192,8 @@ workflow.add_node("no_urls",no_urls)
 workflow.add_node("get_urls",get_urls)
 workflow.add_node("get_data",get_data)
 
-workflow.set_entry_point("get_companies")
+workflow.set_entry_point("generate_query")
+workflow.add_edge("generate_query", "get_companies")
 workflow.add_edge("get_companies", "get_summary")
 workflow.add_edge("get_summary", "get_linkedin_company")
 workflow.add_edge("get_linkedin_company", "no_urls")
@@ -190,7 +206,6 @@ workflow_app=workflow.compile()
 
 
 def ai_agent(**kwargs):
-    # prompt = {key: value for key, value in kwargs.items()}
     prompt = json.dumps(kwargs)
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
