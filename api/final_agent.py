@@ -67,7 +67,7 @@ def personal_linkedin(link):
 def generate_query(state):
     in_put =  json.loads(state["messages"][-1].content)
     sector = in_put["sector"]
-    purpose = in_put["purpose"]
+    purpose = in_put["prompt"]
     prompt=f"Generate a Google search query to find a list of companies in the {sector} sector for the purpose of {purpose}. Ensure that the query excludes blogs, posts, and general articles, focusing only on company listings. The search query should be structured for web scraping to extract company names."
     response = client.chat.completions.create(
             model="llama3-8b-8192",
