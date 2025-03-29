@@ -11,27 +11,20 @@ from selenium.webdriver.chrome.webdriver import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 import requests
-options = Options()
-options.add_argument("--headless") 
-options.add_argument("--incognito")
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
-options.add_argument('--remote-debugging-port=9222')
-
-
-
-driver = webdriver.Chrome(options=options)
-
 
 
 
 def scrape_website(website):
-    options = Options()
-    options.add_argument("--headless") 
-    options.add_argument("--incognito")
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--remote-debugging-port=9222')
+    # options = Options()
+    # options.add_argument("--headless") 
+    # options.add_argument("--incognito")
+    # options.add_argument('--no-sandbox')
+    # options.add_argument('--disable-dev-shm-usage')
+    # options.add_argument('--remote-debugging-port=9222')
+
+    # driver = webdriver.Chrome(options=options)
+
+
     
     try:
         response = requests.get(website)
@@ -96,6 +89,13 @@ def scrape_website1(website):
 
 
 def login():
+    options = ChromeOptions()
+    options.add_argument("--incognito")
+    options.add_argument("--headless")
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--remote-debugging-port=9222')
+    driver = webdriver.Chrome(options=options)
     driver.get('https://www.linkedin.com/login')
     email = driver.find_element(By.ID, 'username')
     email.send_keys("prabhas.mudhiveti.ecelliitkgp@gmail.com")
@@ -110,6 +110,13 @@ def login():
 
 def business(website):
     try:
+        options = ChromeOptions()
+        options.add_argument("--incognito")
+        options.add_argument("--headless")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--remote-debugging-port=9222')
+        driver = webdriver.Chrome(options=options)
         try:
             with open("cookies.pkl", "rb") as file:
                 cookies = pickle.load(file)
@@ -138,6 +145,13 @@ def business(website):
 
 def about(website):
     try:
+        options = ChromeOptions()
+        options.add_argument("--incognito")
+        options.add_argument("--headless")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--remote-debugging-port=9222')
+        driver = webdriver.Chrome(options=options)
         try:
             with open("cookies.pkl", "rb") as file:
                 cookies = pickle.load(file)
@@ -162,6 +176,13 @@ def about(website):
 
 def personal(link):
     try:
+        options = ChromeOptions()
+        options.add_argument("--incognito")
+        options.add_argument("--headless")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--remote-debugging-port=9222')
+        driver = webdriver.Chrome(options=options)
         driver.get('https://www.linkedin.com/login')
         name = driver.find_element(By.TAG_NAME,"h1").text
         headline = driver.find_element(By.CLASS_NAME,"text-body-medium break-words")

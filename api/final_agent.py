@@ -194,7 +194,7 @@ def ai_agent(**kwargs):
     prompt = json.dumps(kwargs)
     state = {"messages": [HumanMessage(content=prompt)]}
     output = workflow_app.invoke(state)
-    return output["url"]
+    return output["urls"]
 
 
 

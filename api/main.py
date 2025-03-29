@@ -166,7 +166,7 @@ def search_agent(link,prompt):
 def business_linkedin(link):
     data=business(link)
     about_data=about(link)
-    # data.append(invoke_llm(f"{about_data} from this data summarise the about_info in 10 words. just return the summary and nothing else"))
+    data.append(invoke_llm(f"{about_data} from this data summarise the about_info in 10 words. just return the summary and nothing else"))
     return data
 
 
