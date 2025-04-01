@@ -31,8 +31,12 @@ A brief description of what your project does and its purpose.
      ```
    - **Search Agent**:  
      ```excel
-     =WEBSEARCH_AGENT(url,"query")
-     ```
+     =SEARCH_AGENT(url,"query")
+
+  - **Agent(Scraps all the required data for purpose automatically**:  
+  ```excel
+  =AGENT(sector,purpose,job title)
+
    
 
 
